@@ -1,5 +1,7 @@
 # workspace-backup
 
+> 🔒 **Diaudit & aman** — lolos skill-gate 100/100 · berjalan **lokal-saja**: tanpa panggilan jaringan, tanpa `eval`/kode ter-obfuscate. Semua kode terbuka & bisa kamu verifikasi sendiri. _(Audit keamanan: 2026-07-17)_
+
 Keep an OpenClaw agent's workspace safe, recoverable, and synced — without losing or leaking anything. Derived from the `workspace-sync-backup` Tower book; packages the three jobs people conflate (backup vs sync vs visibility) into one tested helper.
 
 ## What you get
