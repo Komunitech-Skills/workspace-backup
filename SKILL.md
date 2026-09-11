@@ -1,7 +1,7 @@
 ---
 name: workspace-backup
 description: Keep an OpenClaw agent's workspace safe, recoverable, and synced — one helper for git snapshot (commit-on-change, idle no-op), state checkpoints (save/restore/verify), and repo gc. Encodes the backup-vs-sync-vs-visibility distinction and the .gitignore secret trap. Use when you back up a workspace, checkpoint state before a risky change, or a runaway add bloats the repo.
-version: 1.0.0
+version: 1.0.1
 metadata:
   openclaw:
     emoji: "💾"
@@ -18,55 +18,20 @@ license: UNLICENSED
 lastUpdated: 2026-06-17
 ---
 
-# Workspace Backup
+# Workspace backup
 
-Keep an agent's workspace safe, recoverable, and synced — without losing or leaking anything. One helper covers the three jobs people conflate.
-
-## 🚀 Quick Start
+Keep recovery local unless the owner requests off-VPS replication. Preserve existing working backup schedules and distinguish backups from Git synchronization.
 
 ```bash
-./scripts/backup.sh snapshot                       # git add+commit ONLY if changed (idle = no-op)
-./scripts/backup.sh checkpoint create "pre-deploy" # save critical state to a timestamped checkpoint
-./scripts/backup.sh checkpoint list                # list checkpoints (newest marked latest)
-./scripts/backup.sh checkpoint restore latest      # restore (current state is backed up first)
-./scripts/backup.sh checkpoint verify latest       # check files + sha256 vs manifest
-./scripts/backup.sh gc                             # git gc --prune=now (loose-object bloat)
+OPENCLAW_WORKSPACE=/absolute/workspace bash scripts/backup.sh checkpoint create pre-deploy
+OPENCLAW_WORKSPACE=/absolute/workspace bash scripts/backup.sh checkpoint verify latest
+OPENCLAW_WORKSPACE=/absolute/workspace bash scripts/backup.sh checkpoint restore latest
 ```
 
-Paths are env-overridable — `WORKSPACE_DIR`, `CHECKPOINT_DIR`, `CHECKPOINT_FILES` (defaults suit a standard OpenClaw layout).
+Set the required workspace-relative files with `CHECKPOINT_FILES` or `--files`; every required source must exist. The default list is not a full OpenClaw state backup. Full recovery also needs the selected state/config and agent databases, which the existing Rin backup system covers.
 
-## 🧭 Backup vs sync vs visibility (don't conflate)
+Checkpoint manifests are nonempty and schema-checked, with SHA-256 per file. SQLite sources use the online backup API. Verify before restore; active WAL/SHM writers must be stopped/checkpointed. Current files are backed up before restoration and failed copies roll back.
 
-Three different problems, three different mechanisms:
+`snapshot` uses a private Git index, scans staged paths/content before commit, and preserves the owner's index on a rejected snapshot. Continue to ignore credentials, model binaries and generated state; heuristic scanning is not a guarantee that all secrets are detected. Sensitive filenames in historical Git do not alone establish exposure or require key rotation.
 
-- **Backup** = a recoverable copy if disaster strikes (a checkpoint, or a tarball off-box).
-- **Sync** = commits flowing between two live copies (git pull/push).
-- **Visibility** = a human reading the agent's state in a nice UI.
-
-Confusing them is why people *think* they have a backup when they have none. A nightly tarball is **not** a git commit, and `git pull` only moves **commits** — never an uncommitted working tree. So a change syncs only if it is **committed** on the source **and** the clone **pulls**. `snapshot` is the commit half: run it on a cron so writes actually flow.
-
-Architecture is **one-way: source → clone** (the VPS runs the agent; the clone pulls and never pushes back). See references for the full diagram.
-
-## 🔒 The .gitignore secret discipline
-
-`snapshot` runs `git add -A`, which commits **everything not ignored** — a live grenade on an agent box. Before you ever enable it, `.gitignore` must cover:
-
-- **secrets** — `.env`, `*.key`, credential files
-- **dependencies** — `node_modules/`, venvs, model/browser binaries
-- **generated** — search indexes, caches, logs
-
-Then verify a secret was never committed: `git log --all -- .env` should be **empty**. `snapshot` relies entirely on `.gitignore` for this — it does not scan content.
-
-## ✅ When to use
-
-- **Before any risky change** (big edit, migration, runaway-script risk) → `checkpoint create`.
-- **On a schedule** → `snapshot` every ~30 min via cron so writes reach your backup clone.
-- **After a stray binary `add`** bloated `.git` → `gc`.
-- **Recovering** a clobbered state → `checkpoint restore` (then verify).
-
-Two non-obvious rules baked in: `snapshot` is a **clean no-op when idle** (no empty commits), and if you log its cron output, write the log **outside** the workspace (a log inside it is a change → next snapshot commits it → loop).
-
-→ Full reference (one-way sync diagram · secret-staging gotcha · gc/prune · restore procedure · incident lessons): [`references/backup-guide.md`](references/backup-guide.md) · deep theory: `tower/workspace-sync-backup.md`.
-
----
-*Derived from the `workspace-sync-backup` Tower book. By Rin 💾*
+`gc` uses a two-week prune grace period under the helper lock. Keep logs outside the tracked workspace. Verify create → corrupt/reject → restore on synthetic files and a live SQLite fixture before relying on a new configuration.

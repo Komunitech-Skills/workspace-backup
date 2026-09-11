@@ -1,4 +1,12 @@
-# Changelog — workspace-backup
+# Changelog
+
+## 2026-09-11 integration remediation
+
+Local checkpoints with strict required-file manifests, hashes, verified restore and SQLite online backups. Git snapshots use a private index and a pre-commit secret gate. Retain the existing Rin backup schedule; off-VPS copies are not required.
+
+Explicit workspace selection, reversible lifecycle and regression coverage; install status does not imply runtime readiness.
+
+— workspace-backup
 
 ## 1.0.0 (2026-06-17)
 - Initial release. Derived from the `workspace-sync-backup` Tower book (+ Rin's live auto-commit / checkpoint scripts).
