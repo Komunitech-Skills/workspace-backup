@@ -1,12 +1,12 @@
 ---
 name: workspace-backup
-description: Keep an OpenClaw agent's workspace safe, recoverable, and synced — one helper for git snapshot (commit-on-change, idle no-op), state checkpoints (save/restore/verify), and repo gc. Encodes the backup-vs-sync-vs-visibility distinction and the .gitignore secret trap. Use when you back up a workspace, checkpoint state before a risky change, or a runaway add bloats the repo.
+description: Local workspace checkpoints with manifest verification, SQLite online backup and isolated restore.
 version: 1.0.1
 metadata:
   openclaw:
     emoji: "💾"
     requires:
-      bins: ["bash", "git"]
+      bins: ["bash", "python3", "git"]
 triggers:
   - "back up my workspace"
   - "checkpoint state"
@@ -15,7 +15,7 @@ triggers:
   - "git gc"
 author: Rin
 license: UNLICENSED
-lastUpdated: 2026-06-17
+lastUpdated: 2026-09-14
 ---
 
 # Workspace backup
@@ -35,3 +35,5 @@ Checkpoint manifests are nonempty and schema-checked, with SHA-256 per file. SQL
 `snapshot` uses a private Git index, scans staged paths/content before commit, and preserves the owner's index on a rejected snapshot. Continue to ignore credentials, model binaries and generated state; heuristic scanning is not a guarantee that all secrets are detected. Sensitive filenames in historical Git do not alone establish exposure or require key rotation.
 
 `gc` uses a two-week prune grace period under the helper lock. Keep logs outside the tracked workspace. Verify create → corrupt/reject → restore on synthetic files and a live SQLite fixture before relying on a new configuration.
+
+For installation prerequisites and expected functional results, read [README.md](README.md) and [VERIFICATION.md](VERIFICATION.md). Installation alone does not establish runtime readiness.
