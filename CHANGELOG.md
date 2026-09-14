@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-14 — Audit acceptance
+
+- Document private-repository access, explicit prerequisites, functional expectations and recovery limits.
+- Add one offline test entrypoint and CI; distinguish runtime/behavior evidence from installation status.
+
+
 ## 2026-09-11 integration remediation
 
 Local checkpoints with strict required-file manifests, hashes, verified restore and SQLite online backups. Git snapshots use a private index and a pre-commit secret gate. Retain the existing Rin backup schedule; off-VPS copies are not required.

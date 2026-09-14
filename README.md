@@ -2,6 +2,23 @@
 
 Local checkpoints with strict required-file manifests, hashes, verified restore and SQLite online backups. Git snapshots use a private index and a pre-commit secret gate. Retain the existing Rin backup schedule; off-VPS copies are not required.
 
+## Get the private repository
+
+Use an account or GitHub App with **read access** to this repository. Configure authentication on the machine running OpenClaw; a successful login on another machine does not transfer access. For an existing GitHub CLI login:
+
+```bash
+gh auth status
+gh auth setup-git
+gh repo clone rin-proxy/workspace-backup
+cd workspace-backup
+git fetch origin main
+# Set REF to the reviewed full commit from the release manifest or PR.
+REF=FULL_40_CHARACTER_COMMIT
+git checkout --detach "$REF"
+```
+
+The placeholder must be replaced before execution. Do not paste tokens into clone URLs, agent prompts, config examples or logs. HTTPS updates below use the configured Git credential helper. A 404 on a private repo can mean missing access: check the account and repository permission first. Run installer commands from this checkout; `WS` always selects the target agent workspace explicitly.
+
 ## Compatibility
 
 Validated against OpenClaw 2026.9.3. Linux, Bash, Git and Python 3.11+ are required for the operational lifecycle. JavaScript components require Node 22.13+; the runtime SDK tests use Node 24. Revalidate SDK contracts before upgrading OpenClaw.
@@ -21,7 +38,7 @@ OPENCLAW_WORKSPACE="$WS" bash scripts/backup.sh checkpoint verify
 ## Update, rollback and remove
 
 ```bash
-bash scripts/update.sh --workspace "$WS" --repo https://github.com/rin-proxy/workspace-backup.git --ref FULL_40_CHARACTER_COMMIT
+bash scripts/update.sh --workspace "$WS" --repo https://github.com/rin-proxy/workspace-backup.git --ref "$REF"
 bash scripts/rollback.sh --workspace "$WS"
 bash scripts/uninstall.sh --workspace "$WS"
 ```
@@ -30,6 +47,8 @@ Install/reinstall is idempotent. Updates refuse unreviewed code drift; `--force`
 
 ## Validation
 
-Run the repository tests against synthetic fixtures; inspect commands before using live credentials. Python tests: `python3 -m unittest discover -s tests -p "test_*.py"` where present. JavaScript tests are in `test/`, `tests/`, or `_semantic-stack/test-*.mjs`. Include install → reinstall → pinned update → rollback → uninstall, owner-data preservation, failure paths and a real OpenClaw integration test. No service or scheduler is enabled by the common skill installer.
+```bash
+bash test.sh
+```
 
-The detailed agent procedure remains in `SKILL.md` where present. The compatibility and lifecycle instructions in this README describe the current implementation.
+This entrypoint runs provider-free tests in temporary workspaces with a clean HOME and no inherited service credentials. Exit 0 means the listed tests passed; optional native tests print SKIPPED when dependencies are absent. It does not prove live model quality, delivery, or production readiness. See [VERIFICATION.md](VERIFICATION.md) for functional acceptance criteria, expected results and failure handling. CI runs this same entrypoint on Python 3.11 and Node 24. Recheck real SDK/native/model integration separately when changing those components.
