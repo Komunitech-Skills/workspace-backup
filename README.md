@@ -1,6 +1,50 @@
 # workspace-backup
 
-Local checkpoints with strict required-file manifests, hashes, verified restore and SQLite online backups. Git snapshots use a private index and a pre-commit secret gate. Retain the existing Rin backup schedule; off-VPS copies are not required.
+Create and verify local file checkpoints, take SQLite online backups, and restore selected workspace files. Git snapshots and checkpoint archives are separate recovery mechanisms.
+
+Navigation: [When to use it](#when-to-use-it) · [See the expected result](#see-the-expected-result) · [Quick start on synthetic data](#quick-start-on-synthetic-data) · [Using it from OpenClaw](#using-it-from-openclaw) · [Input, output and completion](#input-output-and-completion) · [Commands and configuration](#commands-and-configuration) · [Data and effects](#data-and-effects) · [Get the private repository](#get-the-private-repository) · [Compatibility](#compatibility) · [Install and verify](#install-and-verify) · [Update, rollback and remove](#update-rollback-and-remove) · [Validation](#validation) · [Shared installer source](#shared-installer-source) · [Troubleshooting](#troubleshooting) · [Related products and further reading](#related-products-and-further-reading)
+
+## When to use it
+
+Before changing owned workspace files or practicing recovery. Select the full required file list explicitly; default checkpoints are not a complete OpenClaw instance backup.
+
+## See the expected result
+
+Example request: **“Create a checkpoint of the synthetic note, verify it, then demonstrate recovery inside the test workspace.”**
+
+Expected behavior: JSON reports status OK for creation and verification; restoring the fixture recovers its original content. This is an illustrative acceptance scenario, not a captured production conversation.
+
+## Quick start on synthetic data
+
+After obtaining a reviewed checkout using [private access](#get-the-private-repository), run:
+
+```bash
+bash examples/quickstart.sh
+```
+
+The script creates a private temporary workspace, prints its artifact directory and checks the result. Read [the example](examples/quickstart.sh) before running it. It keeps the synthetic artifacts for inspection; remove only the printed example directory when finished. It does not target your existing workspace or enable production services.
+
+**What this example proves:** The real local helper runs on synthetic data and checks the documented result. This is not an assessment of production data or model answer quality.
+
+Success ends with `Quickstart passed: workspace-backup`; an unexpected result exits nonzero. Some examples deliberately provoke a failure and verify it is rejected. Run installation and the relevant functional probe below for your own selected instance.
+
+## Using it from OpenClaw
+
+The installer places this package under `skills/workspace-backup` in the explicit workspace and adds its managed instruction pointer. Ask the agent in that workspace to read the matching SKILL.md and follow it. The chat example is natural language, not a promise of a registered slash command.
+
+## Input, output and completion
+
+Input: `--workspace` and required relative `--files`. Output: checkpoint directory, manifest hashes and operation status. Missing required files or corrupt archives fail. Restore writes selected workspace files and retains a pre-restore checkpoint where applicable.
+
+Typical workflow: select the intended input/workspace → inspect prerequisites → run the matching operation → inspect its real result and artifact → report success, missing evidence or failure. JSON reports status OK for creation and verification; restoring the fixture recovers its original content.
+
+## Commands and configuration
+
+`bash scripts/backup.sh checkpoint create LABEL --workspace DIR --files note.md`; `checkpoint verify latest`; `checkpoint restore latest`. Repeat `--workspace DIR` for each command. `snapshot` uses Git; `gc` performs Git maintenance.
+
+## Data and effects
+
+Checkpoints and manifests are local. SQLite uses the online backup API; restore requires handling active database writers. Snapshot creates a Git commit with a private index. No off-machine replication or new schedule is enabled by installation. Keep credentials out of example commands and reports. Use synthetic data for verification; preserve owner data during code maintenance.
 
 ## Get the private repository
 
@@ -21,7 +65,7 @@ The placeholder must be replaced before execution. Do not paste tokens into clon
 
 ## Compatibility
 
-Validated against OpenClaw 2026.9.3. Linux, Bash, Git and Python 3.11+ are required for the operational lifecycle. JavaScript components require Node 22.13+; the runtime SDK tests use Node 24. Revalidate SDK contracts before upgrading OpenClaw.
+Release evidence covers OpenClaw 2026.9.3. Bash, Python 3.11+, Git. Database fixtures use Python sqlite3; no model provider. Revalidate changed SDK/native contracts before using another OpenClaw version.
 
 ## Install and verify
 
@@ -66,3 +110,15 @@ the change. The transfer requires the suite's recorded code to be unchanged. Sui
 rollback/uninstall will then preserve that standalone component. To return to suite
 ownership, uninstall the standalone package (data remains preserved), then explicitly
 install the selected suite component. Ordinary update/rollback commands remain available.
+
+## Troubleshooting
+
+Missing source → correct the required file list, then recreate and verify. Hash mismatch → preserve the failed archive and use a verified checkpoint. Busy SQLite restore → stop/checkpoint the intended test writer before retrying.
+
+Private clone returns 404 → check the authenticated account and repository read permission on this machine → repeat checkout. Installation rejected → inspect the reported workspace/ownership/drift conflict → resolve that exact cause and rerun status. A successful install receipt alone is not functional evidence; repeat the acceptance probe after recovery.
+
+## Related products and further reading
+
+[safe-update](https://github.com/rin-proxy/safe-update) · [workspace-maintenance](https://github.com/rin-proxy/workspace-maintenance). The [runbook catalog](https://github.com/rin-proxy/rin-runbook/blob/main/CATALOG.md) identifies active sources and presets. skill-curator is archived; new skill-management installs use skill-forge.
+
+[Skill instructions](SKILL.md) · [Acceptance and recovery](VERIFICATION.md) · [Changelog](CHANGELOG.md) · [Commercial license](LICENSE-COMMERCIAL.md). Follow the repository's actual license/metadata and owner-granted access; this guide introduces no new license or redistribution grant. Detailed agent procedures stay in their existing reference files so discovery instructions remain concise.
