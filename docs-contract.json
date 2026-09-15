@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "canonical_checker": "rin-proxy/rin-runbook:scripts/check-docs.py",
+  "checker_sha256": "4af5103319e7f08856013cd06a815f3ba16b90ac0b5ef15df25404531d8cd27a",
+  "documents": [
+    "README.md",
+    "RELEASE-NOTES.md",
+    "COMPATIBILITY.md"
+  ],
+  "cli": [
+    {
+      "source": "scripts/lifecycle.py",
+      "document": "README.md",
+      "flags": [
+        "--workspace",
+        "--ref"
+      ]
+    }
+  ],
+  "config": [],
+  "required_files": [
+    "examples/quickstart.sh",
+    "test.sh"
+  ],
+  "required_text": [
+    {
+      "document": "README.md",
+      "values": [
+        "examples/quickstart.sh"
+      ]
+    }
+  ]
+}
