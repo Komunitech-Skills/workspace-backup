@@ -1,7 +1,7 @@
 ---
 name: workspace-backup
 description: Local workspace checkpoints with manifest verification, SQLite online backup and isolated restore.
-version: 1.0.1
+version: 1.0.2
 metadata:
   openclaw:
     emoji: "💾"
@@ -15,7 +15,7 @@ triggers:
   - "git gc"
 author: Rin
 license: UNLICENSED
-lastUpdated: 2026-09-14
+lastUpdated: 2026-09-15
 ---
 
 # Workspace backup

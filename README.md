@@ -52,3 +52,17 @@ bash test.sh
 ```
 
 This entrypoint runs provider-free tests in temporary workspaces with a clean HOME and no inherited service credentials. Exit 0 means the listed tests passed; optional native tests print SKIPPED when dependencies are absent. It does not prove live model quality, delivery, or production readiness. See [VERIFICATION.md](VERIFICATION.md) for functional acceptance criteria, expected results and failure handling. CI runs this same entrypoint on Python 3.11 and Node 24. Recheck real SDK/native/model integration separately when changing those components.
+
+## Shared installer source
+
+Lifecycle code is generated from the reviewed skill-forge core; `vendor.json` records
+source commits and file hashes. Run `python3 scripts/vendor.py check` to detect drift.
+Keep this manifest with the package. Installation and pinned updates remain standalone;
+no mutable upstream branch is fetched at runtime.
+
+A suite-owned component can move to standalone ownership using
+`bash scripts/install.sh --workspace /absolute/workspace --adopt-suite` after reviewing
+the change. The transfer requires the suite's recorded code to be unchanged. Suite
+rollback/uninstall will then preserve that standalone component. To return to suite
+ownership, uninstall the standalone package (data remains preserved), then explicitly
+install the selected suite component. Ordinary update/rollback commands remain available.

@@ -22,3 +22,9 @@ Explicit workspace selection, reversible lifecycle and regression coverage; inst
   - `gc` — `git gc --prune=now` for loose-object bloat.
 - Rin-specific paths generalized to env-overridable vars: `WORKSPACE_DIR`, `CHECKPOINT_DIR`, `CHECKPOINT_FILES`.
 - PDA-structured: lean SKILL.md (body ≤100 lines) + `references/backup-guide.md` (one-way sync architecture, secret-staging gotcha, gc/prune, restore procedure, incident lessons).
+
+## 2026-09-15 — shared lifecycle
+
+- Pin generated lifecycle code to its canonical source and verify distributed hashes.
+- Guard suite-to-standalone ownership transfers and release receipts on uninstall.
+- Preserve existing command contracts and owner data.
