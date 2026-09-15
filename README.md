@@ -122,3 +122,9 @@ Private clone returns 404 → check the authenticated account and repository rea
 [safe-update](https://github.com/rin-proxy/safe-update) · [workspace-maintenance](https://github.com/rin-proxy/workspace-maintenance). The [runbook catalog](https://github.com/rin-proxy/rin-runbook/blob/main/CATALOG.md) identifies active sources and presets. skill-curator is archived; new skill-management installs use skill-forge.
 
 [Skill instructions](SKILL.md) · [Acceptance and recovery](VERIFICATION.md) · [Changelog](CHANGELOG.md) · [Commercial license](LICENSE-COMMERCIAL.md). Follow the repository's actual license/metadata and owner-granted access; this guide introduces no new license or redistribution grant. Detailed agent procedures stay in their existing reference files so discovery instructions remain concise.
+
+## Release and maintenance checks
+
+See [release notes](RELEASE-NOTES.md) and [tested compatibility](COMPATIBILITY.md).
+Run `python3 scripts/check-docs.py` to validate local documentation links and declared interfaces;
+CI also runs the synthetic quickstart. Private GitHub access is required to download releases.
