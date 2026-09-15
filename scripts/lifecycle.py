@@ -107,6 +107,19 @@ def status(ws, target, state, slug):
 
 
 def apply(args, root, ws, slug):
+    # Serialize with the suite before acquiring the per-skill lock.
+    suite_state = ws/'.memory-suite'
+    if suite_state.is_symlink():
+        raise ValueError('suite state must not be a symlink')
+    with contextlib.ExitStack() as stack:
+        if suite_state.exists():
+            if (suite_state/'install.lock').is_symlink():raise ValueError('suite lock must not be a symlink')
+            suite_lock = stack.enter_context((suite_state/'install.lock').open('a'))
+            fcntl.flock(suite_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return apply_locked(args, root, ws, slug)
+
+
+def apply_locked(args, root, ws, slug):
     target = ws/'skills'/slug
     state = ws/'.openclaw-skill-state'/slug
     if (ws/'.openclaw-skill-state').is_symlink() or state.is_symlink():
@@ -122,6 +135,18 @@ def apply(args, root, ws, slug):
         if agents.is_symlink():
             raise ValueError('AGENTS.md must not be a symlink')
         before = agents.read_text() if agents.exists() else None
+        suite_file = ws/'.memory-suite/install.json'
+        if suite_file.is_symlink():
+            raise ValueError('suite receipt must not be a symlink')
+        suite_before = suite_file.read_text() if suite_file.exists() else None
+        suite = json.loads(suite_before) if suite_before else {}
+        suite_owned = suite.get('paths', {}).get(slug)
+        if suite_owned:
+            if args.operation not in ('install', 'update') or not getattr(args, 'adopt_suite', False):
+                raise ValueError('component belongs to memory-suite; install with --adopt-suite after review')
+            if Path(suite_owned['path']) != target or suite_owned['hashes'] != inventory(target):
+                raise ValueError('suite component changed; reconcile drift before ownership transfer')
+
         if args.operation == 'uninstall':
             after = replace_block(before or '', slug, '')
             archive = state/('removed-' + uuid.uuid4().hex)
@@ -134,6 +159,8 @@ def apply(args, root, ws, slug):
                 if archive.exists():
                     archive.rename(target)
                 raise
+            if not args.keep_code and (state/'receipt.json').exists():
+                (state/'receipt.json').rename(state/('uninstalled-receipt-' + uuid.uuid4().hex + '.json'))
             print(json.dumps({'removed': not args.keep_code, 'data_preserved': True, 'archive': str(archive) if archive.exists() else None}))
             return
         if args.operation == 'rollback':
@@ -192,14 +219,17 @@ def apply(args, root, ws, slug):
                 previous = json.loads((state/'receipt.json').read_text()) if (state/'receipt.json').exists() else {}
                 if previous.get('files') != inventory(target):
                     raise ValueError('installed code changed or is unmanaged; review drift before --force')
-            if replacing and target.exists() and not (args.force or args.operation == 'update'):
+            if replacing and target.exists() and not (args.force or args.operation == 'update' or suite_owned):
                 raise ValueError('target already exists; review changes then pass --force')
             # Prepare all text and metadata before the code swap.
             block = (source/'scripts/activation.md').read_text()
             after = before if args.no_agents else replace_block(before or '', slug, block.rstrip())
-            if not replacing and after == before and previous_receipt.get('files') == inventory(target):
+            if not suite_owned and not replacing and after == before and previous_receipt.get('files') == inventory(target):
                 print(json.dumps({'installed': True, 'workspace': str(ws), 'skill': slug, 'unchanged': True, 'runtime_verified': False, 'rollback_available': bool(previous_receipt.get('backup'))}))
                 return
+            required = sum(p.stat().st_size for p in source.rglob('*') if p.is_file() and not any(x in p.relative_to(source).parts for x in ('.git','node_modules','__pycache__'))) * 2 + 1024 * 1024
+            if replacing and shutil.disk_usage(ws).free < required:
+                raise ValueError('insufficient disk for staging and rollback')
             stage = state/('stage-' + uuid.uuid4().hex)
             if replacing:
                 shutil.copytree(source, stage, ignore=shutil.ignore_patterns('.git', 'node_modules', '__pycache__', '.pytest_cache'))
@@ -219,7 +249,17 @@ def apply(args, root, ws, slug):
                 atomic_write(state/'receipt.json', json.dumps({'skill': slug, 'revision': revision, 'time': time.time(),
                     'backup': str(backup) if backup else None, 'agents_before': before, 'agents_after': after,
                     'files': inventory(target)}, indent=2))
+                if suite_owned:
+                    # Remove ownership only after code and standalone receipt are durable.
+                    suite['paths'].pop(slug)
+                    atomic_write(suite_file, json.dumps(suite, indent=2))
             except Exception:
+                if previous_receipt:
+                    atomic_write(state/'receipt.json', json.dumps(previous_receipt, indent=2))
+                else:
+                    (state/'receipt.json').unlink(missing_ok=True)
+                if suite_before is not None:
+                    atomic_write(suite_file, suite_before)
                 if replacing:
                     shutil.rmtree(target)
                     if backup:
@@ -241,6 +281,7 @@ def main():
     p.add_argument('--repo')
     p.add_argument('--ref')
     p.add_argument('--force', action='store_true')
+    p.add_argument('--adopt-suite', action='store_true', help='transfer an unchanged suite-owned component to standalone ownership')
     p.add_argument('--no-agents', action='store_true')
     p.add_argument('--keep-code', action='store_true', help='only remove the AGENTS pointer; skill remains discoverable')
     args = p.parse_args()
