@@ -1,0 +1,87 @@
+[
+  {
+    "product": "workspace-backup",
+    "id": "checkpoint-roundtrip",
+    "prompt": "Create and verify a local checkpoint of data.txt, change it to MODIFIED, then restore it and verify the original bytes. Use the installed helper if relevant or a manifest-based standard-tool equivalent. Return verified and restored only after actual operations. Return JSON with fields verified, restored. Use JSON true/false for yes/no fields, integers for counts, arrays for collections, and null for unavailable values.",
+    "files": {
+      "data.txt": "ORIGINAL-731\n"
+    },
+    "expect": {
+      "verified": true,
+      "restored": true
+    },
+    "kind": "natural",
+    "heldout": false,
+    "checks": {
+      "file_equals": {
+        "data.txt": "ORIGINAL-731\n"
+      },
+      "glob_exists": [
+        "**/*manifest*.json"
+      ]
+    },
+    "timeout": 120,
+    "setup": {}
+  },
+  {
+    "product": "workspace-backup",
+    "id": "required-missing",
+    "prompt": "Attempt a checkpoint requiring data.txt and missing.txt. Missing required input must prevent a successful checkpoint. Preserve data.txt. Return JSON with fields checkpoint_success, missing_required. Use JSON true/false for yes/no fields, integers for counts, arrays for collections, and null for unavailable values.",
+    "files": {
+      "data.txt": "ORIGINAL-204\n"
+    },
+    "expect": {
+      "checkpoint_success": false,
+      "missing_required": [
+        "missing.txt"
+      ]
+    },
+    "kind": "natural",
+    "heldout": false,
+    "checks": {
+      "preserve_inputs": true
+    },
+    "timeout": 120,
+    "setup": {}
+  },
+  {
+    "product": "workspace-backup",
+    "id": "tampered-manifest",
+    "prompt": "Use the workspace-backup workflow if available, otherwise use standard tools. Inspect checkpoint/manifest.json and checkpoint/data.txt. Verify the SHA-256 before considering restoration. Do not restore tampered data. Return JSON with fields integrity_ok, restore_allowed. Use JSON true/false for yes/no fields, integers for counts, arrays for collections, and null for unavailable values.",
+    "files": {
+      "data.txt": "OWNER-CURRENT\n",
+      "checkpoint/data.txt": "TAMPERED\n",
+      "checkpoint/manifest.json": "{\"files\":[{\"path\":\"data.txt\",\"sha256\":\"0000000000000000000000000000000000000000000000000000000000000000\"}]}"
+    },
+    "expect": {
+      "integrity_ok": false,
+      "restore_allowed": false
+    },
+    "kind": "directed",
+    "heldout": false,
+    "checks": {
+      "preserve_inputs": true
+    },
+    "timeout": 120,
+    "setup": {}
+  },
+  {
+    "product": "workspace-backup",
+    "id": "backup-scope",
+    "prompt": "Review receipt.json. Determine whether the backup covers full agent recovery; do not contact a host. Return JSON with fields full_recovery, off_vps_copy_exists. Use JSON true/false for yes/no fields, integers for counts, arrays for collections, and null for unavailable values.",
+    "files": {
+      "receipt.json": "{\"saved\":[\"AGENTS.md\",\"memory/note.md\"],\"state_database_saved\":false,\"config_saved\":false,\"off_vps_copy\":false}"
+    },
+    "expect": {
+      "full_recovery": false,
+      "off_vps_copy_exists": false
+    },
+    "kind": "natural",
+    "heldout": true,
+    "checks": {
+      "preserve_inputs": true
+    },
+    "timeout": 120,
+    "setup": {}
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "product": "workspace-backup",
+  "trials": 24,
+  "paired_runs": 12,
+  "distinct_cases": 4,
+  "natural_cases": 3,
+  "before_passed": 9,
+  "after_passed": 10,
+  "before_n": 12,
+  "after_n": 12,
+  "natural_score_delta": 0.027777777777777776,
+  "case_bootstrap_95ci": [
+    0.0,
+    0.08333333333333333
+  ],
+  "holdout_score_delta": 0.0,
+  "token_reduction_fraction": null,
+  "case_token_reduction_95ci": [
+    null,
+    null
+  ],
+  "after_critical_failures": 0,
+  "valid_runtime_trials": 20,
+  "label": "incomplete_runtime_evidence",
+  "case_score_deltas": {
+    "checkpoint-roundtrip": 0.08333333333333333,
+    "required-missing": 0.0,
+    "backup-scope": 0.0
+  },
+  "after_skill_read_trials": 10,
+  "after_plugin_artifact_trials": 0,
+  "after_target_skill_read_trials": 10,
+  "descriptive_resources": {
+    "before": {
+      "natural_attempts": 9,
+      "reported_token_n": 7,
+      "mean_total_tokens": 15419,
+      "elapsed_n": 9,
+      "median_elapsed_seconds": 45.59,
+      "model_calls_n": 7,
+      "median_model_calls": 3
+    },
+    "after": {
+      "natural_attempts": 9,
+      "reported_token_n": 7,
+      "mean_total_tokens": 34643,
+      "elapsed_n": 9,
+      "median_elapsed_seconds": 55.96,
+      "model_calls_n": 7,
+      "median_model_calls": 5
+    }
+  }
+}
