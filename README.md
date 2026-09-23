@@ -2,7 +2,7 @@
 
 Create and verify local file checkpoints, take SQLite online backups, and restore selected workspace files. Git snapshots and checkpoint archives are separate recovery mechanisms.
 
-Navigation: [When to use it](#when-to-use-it) · [See the expected result](#see-the-expected-result) · [Quick start on synthetic data](#quick-start-on-synthetic-data) · [Using it from OpenClaw](#using-it-from-openclaw) · [Input, output and completion](#input-output-and-completion) · [Commands and configuration](#commands-and-configuration) · [Data and effects](#data-and-effects) · [Get the private repository](#get-the-private-repository) · [Compatibility](#compatibility) · [Install and verify](#install-and-verify) · [Update, rollback and remove](#update-rollback-and-remove) · [Validation](#validation) · [Shared installer source](#shared-installer-source) · [Troubleshooting](#troubleshooting) · [Related products and further reading](#related-products-and-further-reading)
+Navigation: [When to use it](#when-to-use-it) · [See the expected result](#see-the-expected-result) · [Quick start on synthetic data](#quick-start-on-synthetic-data) · [Using it from OpenClaw](#using-it-from-openclaw) · [Input, output and completion](#input-output-and-completion) · [Commands and configuration](#commands-and-configuration) · [Data and effects](#data-and-effects) · [Get the private repository](#get-the-private-repository) · [Compatibility](#compatibility) · [Install and verify](#install-and-verify) · [Update, rollback and remove](#update-rollback-and-remove) · [Validation](#validation) · [Shared installer source](#shared-installer-source) · [Troubleshooting](#troubleshooting) · [Related products and further reading](#related-products-and-further-reading) · [Measured before/after behavior](#measured-beforeafter-behavior)
 
 ## When to use it
 
@@ -128,3 +128,13 @@ Private clone returns 404 → check the authenticated account and repository rea
 See [release notes](RELEASE-NOTES.md) and [tested compatibility](COMPATIBILITY.md).
 Run `python3 scripts/check-docs.py` to validate local documentation links and declared interfaces;
 CI also runs the synthetic quickstart. Private GitHub access is required to download releases.
+
+## Measured before/after behavior
+
+**Runtime evidence incomplete.** Strict success on the recorded synthetic battery was
+9/12 before and 10/12 after. Some attempted runs lack valid runtime evidence. They remain in the denominator; the superiority claim is incomplete. Some strict differences involve rubric or representation ambiguity; read the interpretation notes before drawing a substantive quality conclusion.
+
+Failed strict trials across both arms: 5. Same-evaluator review classifies 1 as representation/fixture ambiguity, 4 as incomplete runtime, and 0 as substantive task failures. These interpretations do not replace original scores.
+
+See [the full comparison, scope, source pin and reproducible evidence](BENCHMARK.md).
+Installation alone does not guarantee a better answer on every task.

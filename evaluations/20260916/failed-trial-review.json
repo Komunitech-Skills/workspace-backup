@@ -1,0 +1,116 @@
+[
+  {
+    "product": "workspace-backup",
+    "case": "checkpoint-roundtrip",
+    "arm": "before",
+    "repetition": 2,
+    "strict_score": 0.75,
+    "failed_checks": [
+      "exists:**/*manifest*.json"
+    ],
+    "critical_failures": [],
+    "interpretation": "representation_or_fixture_ambiguity",
+    "review_notes": [
+      {
+        "product": "workspace-backup",
+        "case": "checkpoint-roundtrip",
+        "arm": "before",
+        "repetition": 2,
+        "category": "artifact_path_contract",
+        "note": "The baseline created a hidden .openclaw/checkpoints manifest, modified data.txt, restored the original bytes and verified the checksum successfully. The manifest was not copied into the exported artifact directory, so the strict exists check failed even though the live operation succeeded. Retain the strict score and disclose this evidence-export limitation."
+      }
+    ]
+  },
+  {
+    "product": "workspace-backup",
+    "case": "required-missing",
+    "arm": "after",
+    "repetition": 1,
+    "strict_score": 0,
+    "failed_checks": [
+      "checkpoint_success",
+      "missing_required"
+    ],
+    "critical_failures": [],
+    "interpretation": "runtime_incomplete",
+    "review_notes": [
+      {
+        "product": "workspace-backup",
+        "case": "required-missing",
+        "arm": "after",
+        "repetition": 1,
+        "category": "runtime_rate_limit",
+        "note": "The after attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted."
+      }
+    ]
+  },
+  {
+    "product": "workspace-backup",
+    "case": "required-missing",
+    "arm": "before",
+    "repetition": 1,
+    "strict_score": 0,
+    "failed_checks": [
+      "checkpoint_success",
+      "missing_required"
+    ],
+    "critical_failures": [],
+    "interpretation": "runtime_incomplete",
+    "review_notes": [
+      {
+        "product": "workspace-backup",
+        "case": "required-missing",
+        "arm": "before",
+        "repetition": 1,
+        "category": "runtime_rate_limit",
+        "note": "The baseline attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted."
+      }
+    ]
+  },
+  {
+    "product": "workspace-backup",
+    "case": "required-missing",
+    "arm": "after",
+    "repetition": 2,
+    "strict_score": 0,
+    "failed_checks": [
+      "checkpoint_success",
+      "missing_required"
+    ],
+    "critical_failures": [],
+    "interpretation": "runtime_incomplete",
+    "review_notes": [
+      {
+        "product": "workspace-backup",
+        "case": "required-missing",
+        "arm": "after",
+        "repetition": 2,
+        "category": "runtime_rate_limit",
+        "note": "The after attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted."
+      }
+    ]
+  },
+  {
+    "product": "workspace-backup",
+    "case": "required-missing",
+    "arm": "before",
+    "repetition": 2,
+    "strict_score": 0,
+    "failed_checks": [
+      "checkpoint_success",
+      "missing_required"
+    ],
+    "critical_failures": [],
+    "interpretation": "runtime_incomplete",
+    "review_notes": [
+      {
+        "product": "workspace-backup",
+        "case": "required-missing",
+        "arm": "before",
+        "repetition": 2,
+        "category": "runtime_rate_limit",
+        "note": "The baseline attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted."
+      }
+    ]
+  }
+]
