@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 — 2026-09-28
+
+- Align skill discovery and helper paths with current OpenClaw.
+- Use the shared lifecycle without default `AGENTS.md` injection.
+
+
 ## 2026-09-14 — Audit acceptance
 
 - Document private-repository access, explicit prerequisites, functional expectations and recovery limits.

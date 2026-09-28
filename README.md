@@ -14,9 +14,8 @@ inside the test workspace.”**
 Expected behavior: JSON reports status OK for creation and verification; restoring the fixture
 recovers its original content.
 
-The installer places this package under `skills/workspace-backup` in the explicit workspace and adds
-its managed instruction pointer. Ask the agent in that workspace to read the matching SKILL.md and
-follow it. The chat example is natural language, not a promise of a registered slash command.
+The installer places this package in the explicit workspace. Current OpenClaw discovers its
+`SKILL.md` directly and leaves `AGENTS.md` owner-controlled. The chat example is natural language, not a promise of a registered slash command.
 
 ## Quick start
 
@@ -74,7 +73,7 @@ active database writers. Snapshot creates a Git commit with a private index. No 
 replication or new schedule is enabled by installation. Keep credentials out of example commands and
 reports. Use synthetic data for verification; preserve owner data during code maintenance.
 
-Release evidence covers OpenClaw 2026.9.3. Bash, Python 3.11+, Git. Database fixtures use Python
+Release evidence covers OpenClaw 2026.9.6. Bash, Python 3.11+, Git. Database fixtures use Python
 sqlite3; no model provider. Revalidate changed SDK/native contracts before using another OpenClaw
 version.
 

@@ -1,3 +1,7 @@
+# v1.1.0 — portfolio contract
+
+Align skill discovery and helper paths with current OpenClaw. Use the shared lifecycle without default `AGENTS.md` injection. No change is deployed directly to Rin.
+
 # v2026.09.15-readiness.1
 
 Documentation links and declared lifecycle CLI flags are checked in CI; the existing synthetic example remains required.

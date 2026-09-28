@@ -1,21 +1,16 @@
 ---
 name: workspace-backup
-description: Local workspace checkpoints with manifest verification, SQLite online backup and isolated restore.
-version: 1.0.2
+description: Create and verify local workspace checkpoints with SQLite-safe backup and isolated restore. Git synchronization is not a backup.
+version: 1.1.0
 metadata:
   openclaw:
-    emoji: "💾"
+    emoji: 💾
     requires:
-      bins: ["bash", "python3", "git"]
-triggers:
-  - "back up my workspace"
-  - "checkpoint state"
-  - "snapshot"
-  - "restore workspace"
-  - "git gc"
-author: Rin
+      bins:
+      - bash
+      - python3
+      - git
 license: UNLICENSED
-lastUpdated: 2026-09-15
 ---
 
 # Workspace backup
@@ -23,9 +18,9 @@ lastUpdated: 2026-09-15
 Keep recovery local unless the owner requests off-VPS replication. Preserve existing working backup schedules and distinguish backups from Git synchronization.
 
 ```bash
-OPENCLAW_WORKSPACE=/absolute/workspace bash scripts/backup.sh checkpoint create pre-deploy
-OPENCLAW_WORKSPACE=/absolute/workspace bash scripts/backup.sh checkpoint verify latest
-OPENCLAW_WORKSPACE=/absolute/workspace bash scripts/backup.sh checkpoint restore latest
+OPENCLAW_WORKSPACE=/absolute/workspace bash {baseDir}/scripts/backup.sh checkpoint create pre-deploy
+OPENCLAW_WORKSPACE=/absolute/workspace bash {baseDir}/scripts/backup.sh checkpoint verify latest
+OPENCLAW_WORKSPACE=/absolute/workspace bash {baseDir}/scripts/backup.sh checkpoint restore latest
 ```
 
 Set the required workspace-relative files with `CHECKPOINT_FILES` or `--files`; every required source must exist. The default list is not a full OpenClaw state backup. Full recovery also needs the selected state/config and agent databases, which the existing Rin backup system covers.

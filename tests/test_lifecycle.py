@@ -24,7 +24,8 @@ class Lifecycle(unittest.TestCase):
             self.call(ROOT,'install',ws)
             slug = next(p.name for p in (ws/'skills').iterdir())
             target = ws/'skills'/slug
-            self.call(ROOT,'install',ws)
+            self.assertEqual((ws/'AGENTS.md').read_text(),'Owner instructions\n')
+            self.call(ROOT,'install',ws,'--legacy-agents-pointer')
             self.assertEqual((ws/'AGENTS.md').read_text().count('<!-- BEGIN:'),1)
             source=base/'origin';shutil.copytree(target,source)
             def git(*args):
@@ -63,16 +64,17 @@ class Lifecycle(unittest.TestCase):
             self.assertEqual((target/'owner-code').read_text(),'original')
             self.assertEqual((ws/'AGENTS.md').read_text(),'owner instructions')
 
-    def test_bad_markers_no_partial_install(self):
+    def test_bad_markers_ignored_by_default_and_refused_when_managed(self):
         with tempfile.TemporaryDirectory() as temp:
             ws=Path(temp)
             import re
             slug=re.search(r'^name:\s*(\S+)',(ROOT/'SKILL.md').read_text(),re.M)[1]
             text=f'Owner\n<!-- BEGIN:{slug} (managed — do not edit between markers) -->\n'
             (ws/'AGENTS.md').write_text(text)
-            self.call(ROOT,'install',ws,success=False)
+            self.call(ROOT,'install',ws)
             self.assertEqual((ws/'AGENTS.md').read_text(),text)
-            self.assertFalse((ws/'skills'/slug).exists())
+            self.assertTrue((ws/'skills'/slug).exists())
+            self.call(ROOT,'install',ws,'--remove-legacy-agents-pointer',success=False)
 
 
 if __name__ == '__main__':

@@ -4,10 +4,10 @@
   "files": [
     {
       "repository": "skill-forge",
-      "revision": "f19715eaea25179636c70fe81a59e57224f3a2c1",
+      "revision": "0d34c6621b7d2a12c3c4dded8ccf310a1e88eaca",
       "source": "core/lifecycle.py",
       "destination": "scripts/lifecycle.py",
-      "sha256": "ac8cbff38618343714434ed346fede2c671ab30b470148446b88f894070e28fa"
+      "sha256": "32127440f4c35d31160b327b7831d35c49c1e4e0b564d41da4f5d150b6d6b5a2"
     },
     {
       "repository": "skill-forge",
