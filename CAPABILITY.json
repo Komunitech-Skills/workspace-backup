@@ -1,0 +1,19 @@
+{
+  "schema": "rin.capability/v1",
+  "name": "workspace-backup",
+  "kind": "tool",
+  "activation": [
+    "scheduled",
+    "manual"
+  ],
+  "discovery": "explicit",
+  "audience": [
+    "operations"
+  ],
+  "sideEffects": "local-backup",
+  "status": "active",
+  "schedule": {
+    "installedByDefault": false,
+    "recommended": "nightly and before updates"
+  }
+}

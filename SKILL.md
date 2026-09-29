@@ -1,7 +1,7 @@
 ---
 name: workspace-backup
 description: Create and verify local workspace checkpoints with SQLite-safe backup and isolated restore. Git synchronization is not a backup.
-version: 1.1.0
+version: 1.2.0
 metadata:
   openclaw:
     emoji: 💾
@@ -11,6 +11,8 @@ metadata:
       - python3
       - git
 license: UNLICENSED
+user-invocable: true
+disable-model-invocation: true
 ---
 
 # Workspace backup

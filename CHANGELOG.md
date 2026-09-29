@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 - 2026-09-29
+
+- Publish an opt-in backup schedule without installing timers.
+
 ## 1.1.0 — 2026-09-28
 
 - Align skill discovery and helper paths with current OpenClaw.
