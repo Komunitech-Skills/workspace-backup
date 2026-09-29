@@ -1,0 +1,14 @@
+{
+  "schema": "rin.schedule/v1",
+  "product": "workspace-backup",
+  "installedByDefault": false,
+  "runner": "system-timer",
+  "jobs": [
+    {
+      "id": "workspace-backup-nightly",
+      "cadence": "nightly and before updates",
+      "command": "bash {baseDir}/scripts/backup.sh snapshot --workspace \"$OPENCLAW_WORKSPACE\"",
+      "mode": "local-backup"
+    }
+  ]
+}

@@ -1,5 +1,11 @@
 # workspace-backup
 
+> **Product classification:** Tool · Activation: Scheduled + Manual · Model discovery: Explicit only
+
+## Activation model
+
+Manual or opt-in scheduled local backup. It stays hidden from automatic model discovery, and installation never creates a timer.
+
 Create and verify local file checkpoints, take SQLite online backups, and restore selected workspace
 files. Git snapshots and checkpoint archives are separate recovery mechanisms.
 
