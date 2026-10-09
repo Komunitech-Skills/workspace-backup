@@ -9,3 +9,4 @@ run() {
 run python3 -m unittest discover -s tests -p "test_*.py"
 
 run python3 scripts/vendor.py check
+run python3 scripts/evaluation-v3.py evaluations/v3/plan.json

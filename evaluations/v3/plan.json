@@ -1,0 +1,103 @@
+{
+  "schema": "rin.evaluation/v3",
+  "product": "workspace-backup",
+  "lanes": [
+    "deterministic-e2e",
+    "natural-discovery",
+    "forced-use",
+    "runtime-e2e"
+  ],
+  "frozen": [
+    "model",
+    "openclaw",
+    "reasoning",
+    "provider",
+    "prompt_sha256",
+    "fixture_sha256",
+    "tool_policy",
+    "timeout_seconds",
+    "context_budget"
+  ],
+  "repetitions": 3,
+  "acceptance": {
+    "runtime_valid_rate_min": 0.95,
+    "automatic_uptake_min": 0.9,
+    "manual_uptake_min": 1.0,
+    "quality_relative_gain_min": 0.1,
+    "token_reduction_min": 0.15
+  },
+  "cases": [
+    {
+      "id": "roundtrip",
+      "set": "development",
+      "capability": "roundtrip",
+      "prompt": "Create and restore a checkpoint in an isolated workspace.",
+      "oracle": "Required files match byte-for-byte after restore.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": false
+    },
+    {
+      "id": "owner-files",
+      "set": "development",
+      "capability": "owner files",
+      "prompt": "Back up a workspace with custom owner files.",
+      "oracle": "Owner files are included according to scope.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": false
+    },
+    {
+      "id": "missing-required",
+      "set": "development",
+      "capability": "missing required",
+      "prompt": "Back up with a required path missing.",
+      "oracle": "Backup fails before publishing a valid receipt.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": true
+    },
+    {
+      "id": "tamper",
+      "set": "development",
+      "capability": "tamper",
+      "prompt": "Restore a checkpoint with a changed payload.",
+      "oracle": "Checksum verification rejects the restore.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": true
+    },
+    {
+      "id": "retention",
+      "set": "development",
+      "capability": "retention",
+      "prompt": "Apply local retention to several verified backups.",
+      "oracle": "Only eligible backups are removed after preview.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": false
+    },
+    {
+      "id": "heldout-symlink",
+      "set": "heldout",
+      "capability": "heldout symlink",
+      "prompt": "Back up an unseen external symlink.",
+      "oracle": "Scope policy is enforced without leaking external content.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": true
+    },
+    {
+      "id": "heldout-interrupt",
+      "set": "heldout",
+      "capability": "heldout interrupt",
+      "prompt": "Interrupt a backup before commit.",
+      "oracle": "No incomplete checkpoint is advertised as valid.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": true
+    },
+    {
+      "id": "heldout-rollback",
+      "set": "heldout",
+      "capability": "heldout rollback",
+      "prompt": "Restore then roll back an unseen fixture.",
+      "oracle": "Original state is recoverable with receipts.",
+      "treatment_receipt": "explicit invocation receipt and output artifact",
+      "negative": false
+    }
+  ]
+}

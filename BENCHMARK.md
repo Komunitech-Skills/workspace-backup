@@ -102,3 +102,6 @@ Strict success: true. Outcome checks: `{"verified": true, "restored": true, "byt
 - required-missing / after / repetition 1: The after attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted.
 - required-missing / before / repetition 2: The baseline attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted.
 - required-missing / after / repetition 2: The after attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted.
+## Current-version certification
+
+The historical results below remain reproducibility evidence for their recorded revisions. They do not certify the current release. The current v3 plan is in `evaluations/v3/plan.json`; `evaluations/v3/STATUS.json` is authoritative. Missing live runtime evidence is reported as `not-run`.
