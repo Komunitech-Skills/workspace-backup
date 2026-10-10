@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
+from contextlib import closing
 from datetime import datetime, timezone
 
 
@@ -42,8 +43,8 @@ def copy_state(src,dst):
     dst.parent.mkdir(parents=True,exist_ok=True,mode=0o700)
     with src.open('rb') as stream:is_sqlite=stream.read(16)==b'SQLite format 3\x00'
     if is_sqlite:
-        with sqlite3.connect(src.resolve().as_uri()+'?mode=ro',uri=True,timeout=10) as source:
-            with sqlite3.connect(dst) as target:source.backup(target)
+        with closing(sqlite3.connect(src.resolve().as_uri()+'?mode=ro',uri=True,timeout=10)) as source:
+            with closing(sqlite3.connect(dst)) as target:source.backup(target)
     else:shutil.copyfile(src,dst)
     dst.chmod(0o600)
     return 'sqlite-backup' if is_sqlite else 'file'

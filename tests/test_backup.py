@@ -1,4 +1,5 @@
 import json, os, pathlib, sqlite3, subprocess, tempfile, unittest
+from contextlib import closing
 SCRIPT=pathlib.Path(__file__).resolve().parents[1]/'scripts/backup.sh'
 
 class Backup(unittest.TestCase):
@@ -21,10 +22,10 @@ class Backup(unittest.TestCase):
         self.run_backup('checkpoint','verify','../outside',ok=False)
     def test_sqlite_online_backup(self):
         db=self.ws/'session.db'
-        with sqlite3.connect(db) as c:
+        with closing(sqlite3.connect(db)) as c:
             c.execute('pragma journal_mode=wal');c.execute('create table memories(note text)');c.execute("insert into memories values ('fixture')");c.commit()
             self.run_backup('checkpoint','create',files='session.db')
-            with sqlite3.connect(self.ws/'memory/checkpoints/latest/session.db') as saved:
+            with closing(sqlite3.connect(self.ws/'memory/checkpoints/latest/session.db')) as saved:
                 self.assertEqual(saved.execute('select note from memories').fetchone()[0],'fixture')
     def test_git_secret_gate_keeps_index(self):
         def git(*args):return subprocess.run(['git',*args],cwd=self.ws,check=True,capture_output=True)
