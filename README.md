@@ -102,6 +102,14 @@ ambiguity; read the interpretation notes before drawing a substantive quality co
 See [the full benchmark](BENCHMARK.md) for the exact comparison and limits. Installation alone does
 not guarantee a better answer on every task.
 
+### Current-version comparison status
+
+The separate v3 three-repetition campaign was cancelled by the owner on 2026-10-26. The scoped
+historical benchmark remains published with its original runtime and source pins. This release does
+not claim statistically certified superiority on the current OpenClaw version; readiness is based on
+deterministic tests, functional quickstart and lifecycle checks, and the explicitly scoped recorded
+evidence.
+
 Detailed documentation: [skill instructions](SKILL.md) · [acceptance and recovery](VERIFICATION.md)
 · [tested compatibility](COMPATIBILITY.md) · [release notes](RELEASE-NOTES.md) ·
 [changelog](CHANGELOG.md) · [commercial license](LICENSE-COMMERCIAL.md).

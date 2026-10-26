@@ -102,6 +102,9 @@ Strict success: true. Outcome checks: `{"verified": true, "restored": true, "byt
 - required-missing / after / repetition 1: The after attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted.
 - required-missing / before / repetition 2: The baseline attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted.
 - required-missing / after / repetition 2: The after attempt ended before a model response because the provider returned an API rate-limit error during runtime startup. It remains a zero-scored invalid-runtime attempt in the original denominator; no replacement is substituted.
-## Current-version certification
+## Current-version comparison status
 
-The historical results below remain reproducibility evidence for their recorded revisions. They do not certify the current release. The current v3 plan is in `evaluations/v3/plan.json`; `evaluations/v3/STATUS.json` is authoritative. Missing live runtime evidence is reported as `not-run`.
+The planned v3 three-repetition campaign was cancelled by the owner on 2026-10-26. Its frozen plan
+is retained as a design record and is not pending certification. The historical results above remain
+reproducibility evidence for their recorded revisions and runtime pins. They do not establish
+statistical superiority on the current OpenClaw version. `evaluations/v3/STATUS.json` is authoritative.
